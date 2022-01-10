@@ -1,0 +1,3 @@
+analyze winning percentage in al east and factors that made it so
+
+pythagorean expectation
