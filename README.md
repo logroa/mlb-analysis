@@ -1,5 +1,2 @@
 # MLB-record-analysis
-# mlb-analysis
-# mlb-analysis
-# mlb-analysis
-# mlb-analysis
+A module established with infrastructure to support continued analysis on a myriad of MLB-related topics
