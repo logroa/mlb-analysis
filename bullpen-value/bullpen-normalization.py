@@ -33,6 +33,25 @@ def value_difference(df):
     plt.savefig(file_path)
 
 
+def paid_vs_diff(df):
+    #groups = df.groupby('year')
+    #for year, group in groups:
+    fig, ax = plt.subplots()
+    sb.scatterplot(data=df, x='bullpen_payroll', y='Composite Difference', hue='Improvement', )
+    ax.set_title('Bullpen Payroll vs Difference in Value')
+    #for idx, row in df.iterrows():
+    #    ax.annotate(str(row['year']) + ' ' + row['abbr'], (row['Composite Value'], row['PR Composite Value']))
+    
+    subfolder_path = os.path.join(os.getcwd(), 'visuals/report')
+
+    if not os.path.exists(subfolder_path):
+        os.makedirs(subfolder_path)
+    
+    file_path = os.path.join(subfolder_path, 'bp-pr-diff.png')
+
+    plt.savefig(file_path)
+
+
 seasons = utils.season_grab()
 teams = utils.team_grab()
 bullpens = utils.bp_grab()
@@ -233,8 +252,9 @@ scaled_reduced['Composite Rank'] = scaled_reduced['Composite Value'].rank(ascend
 pr_scaled_reduced['PR Composite Rank'] = pr_scaled_reduced['PR Composite Value'].rank(ascending = False)
 
 huge = pd.merge(scaled_reduced, pr_scaled_reduced, on=['year', 'abbr'])
+huge = pd.merge(huge, reduced, on=['year', 'abbr'])
 deliv = pd.concat(
-    [huge[['year', 'abbr', 'Composite Value', 'Composite Rank', 'PR Composite Value', 'PR Composite Rank']]],
+    [huge[['year', 'abbr', 'bullpen_payroll', 'Composite Value', 'Composite Rank', 'PR Composite Value', 'PR Composite Rank']]],
     axis=1
 )
 
@@ -244,3 +264,4 @@ deliv['Improvement'] = np.where((deliv['Composite Difference'] > 0), 1, 0)
 deliv.sort_values(by=['PR Composite Value'], inplace=True, ascending=False)
 deliv = deliv.reset_index()
 value_difference(deliv)
+paid_vs_diff(deliv)
