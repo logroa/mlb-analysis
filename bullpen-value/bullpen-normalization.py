@@ -22,7 +22,16 @@ def value_difference(df):
     ax.set_title('Bullpen Performance Scaled for Payroll')
     #for idx, row in df.iterrows():
     #    ax.annotate(str(row['year']) + ' ' + row['abbr'], (row['Composite Value'], row['PR Composite Value']))
-    plt.savefig('visuals/report/bp-performance-pr.png')
+    
+    subfolder_path = os.path.join(os.getcwd(), 'visuals/report')
+
+    if not os.path.exists(subfolder_path):
+        os.makedirs(subfolder_path)
+    
+    file_path = os.path.join(subfolder_path, 'bp-performance-pr.png')
+
+    plt.savefig(file_path)
+
 
 seasons = utils.season_grab()
 teams = utils.team_grab()
@@ -232,6 +241,6 @@ deliv = pd.concat(
 deliv['PR Difference'] = deliv['Composite Rank'] - deliv['PR Composite Rank']
 deliv['Composite Difference'] = deliv['PR Composite Value'] - deliv['Composite Value']
 deliv['Improvement'] = np.where((deliv['Composite Difference'] > 0), 1, 0)
-deliv.sort_values(by=['PR Difference'], inplace=True, ascending=False)
+deliv.sort_values(by=['PR Composite Value'], inplace=True, ascending=False)
 deliv = deliv.reset_index()
 value_difference(deliv)
