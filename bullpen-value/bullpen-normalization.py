@@ -32,43 +32,6 @@ def grapher(df, x, y, tit, fil):
 
     plt.savefig(file_path)
 
-def value_difference(df):
-    #groups = df.groupby('year')
-    #for year, group in groups:
-    fig, ax = plt.subplots()
-    sb.scatterplot(data=df, x='Composite Value', y='PR Composite Value', hue='Improvement', )
-    ax.set_title('Bullpen Performance Scaled for Payroll')
-    #for idx, row in df.iterrows():
-    #    ax.annotate(str(row['year']) + ' ' + row['abbr'], (row['Composite Value'], row['PR Composite Value']))
-    
-    subfolder_path = os.path.join(os.getcwd(), 'visuals/report')
-
-    if not os.path.exists(subfolder_path):
-        os.makedirs(subfolder_path)
-    
-    file_path = os.path.join(subfolder_path, 'bp-performance-pr.png')
-
-    plt.savefig(file_path)
-
-
-def paid_vs_diff(df):
-    #groups = df.groupby('year')
-    #for year, group in groups:
-    fig, ax = plt.subplots()
-    sb.scatterplot(data=df, x='bullpen_payroll', y='Composite Difference', hue='Improvement', )
-    ax.set_title('Bullpen Payroll vs Difference in Value')
-    #for idx, row in df.iterrows():
-    #    ax.annotate(str(row['year']) + ' ' + row['abbr'], (row['Composite Value'], row['PR Composite Value']))
-    
-    subfolder_path = os.path.join(os.getcwd(), 'visuals/report')
-
-    if not os.path.exists(subfolder_path):
-        os.makedirs(subfolder_path)
-    
-    file_path = os.path.join(subfolder_path, 'bp-pr-diff.png')
-
-    plt.savefig(file_path)
-
 
 seasons = utils.season_grab()
 teams = utils.team_grab()
@@ -128,6 +91,7 @@ reduced = reduced.reset_index()
 reduced = reduced.drop('index', 1)
 
 # scale money separated by year
+# don't like scaling from min 0 to max 1, to minimize difference, think we need 0 0 to max 1
 x = pd.DataFrame()
 groups = reduced.groupby('year')
 for key, group in groups:
