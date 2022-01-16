@@ -14,6 +14,24 @@ parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 import utils
 
+def grapher(df, x, y, tit, fil):
+    #groups = df.groupby('year')
+    #for year, group in groups:
+    fig, ax = plt.subplots()
+    sb.scatterplot(data=df, x=x, y=y)
+    ax.set_title(tit)
+    #for idx, row in df.iterrows():
+    #    ax.annotate(str(row['year']) + ' ' + row['abbr'], (row['Composite Value'], row['PR Composite Value']))
+    
+    subfolder_path = os.path.join(os.getcwd(), 'visuals/report')
+
+    if not os.path.exists(subfolder_path):
+        os.makedirs(subfolder_path)
+    
+    file_path = os.path.join(subfolder_path, fil + '.png')
+
+    plt.savefig(file_path)
+
 def value_difference(df):
     #groups = df.groupby('year')
     #for year, group in groups:
@@ -123,6 +141,8 @@ x = x.rename({0: 'scale', 'bullpen_payroll': 'bp_scale'}, axis=1)
 reduced = pd.merge(reduced, x, on=['year','abbr'])
 
 payroll = reduced
+
+money = reduced[['year', 'abbr', 'bullpen_payroll']]
 
 tested_vars = ['bpgp', 'bp_ip', 'sv', 'bp_era', 'era_diff',  'lobp',
     'bbp9', 'kp9', 'gbp', 'hrpfb', 'sv/gp', 'bpw/w', 'bpl/l', 'bp_wins', 'bp_losses']
@@ -263,5 +283,6 @@ deliv['Composite Difference'] = deliv['PR Composite Value'] - deliv['Composite V
 deliv['Improvement'] = np.where((deliv['Composite Difference'] > 0), 1, 0)
 deliv.sort_values(by=['PR Composite Value'], inplace=True, ascending=False)
 deliv = deliv.reset_index()
-value_difference(deliv)
-paid_vs_diff(deliv)
+
+grapher(deliv, 'bullpen_payroll', 'Composite Value', 'BP Payroll vs Composite Score', 'bp-payroll-vs-composite-score')
+grapher(deliv, 'bullpen_payroll', 'PR Composite Value', 'BP Payroll vs PR Composite Score', 'bp-payroll-vs-pr-composite-score')
